@@ -1,0 +1,18 @@
+services:
+  node:
+    image: "node:alpine"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
+    ports:
+      - "5173:5173"
+    command: "npm run dev -- --host"
+
+  # db:
+  #   image: mongo:jammy
+  #   restart: always
+  #   expose:
+  #     - 5432

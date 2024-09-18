@@ -34,7 +34,7 @@ class ConfigType {
 	isBase?: boolean;
 }
 
-export class GbaSPConfig {
+export class Config {
 	@prop({ type: ConfigType })
 	colorsConfigs!: ConfigType[];
 
@@ -42,6 +42,6 @@ export class GbaSPConfig {
 	techConfigs!: ConfigType[];
 }
 
-const GbaSPConfigModel = getModelForClass(GbaSPConfig);
+const ConfigModel = getModelForClass(Config);
 
-export default GbaSPConfigModel;
+export default ConfigModel;

@@ -1,6 +1,8 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import GbaSPConfigModel from "./models/gba-sp-config.model";
+import { seedGbaModel } from "./seeding/gba-sp-config";
 
 dotenv.config();
 
@@ -27,14 +29,19 @@ const connectToDatabase = async () => {
   }
 };
 
-// Connexion à MongoDB et ajout de l'utilisateur après la connexion
 const startApp = async () => {
   await connectToDatabase();  // Connexion à MongoDB
+
+  // SeedGbaModel if the db hasn't been seeded
+  const config = await GbaSPConfigModel.find({})
+  if (config.length === 0) {
+    console.log("Seeding database.")
+    seedGbaModel();
+  }
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
   });
 };
 
-// Démarrer l'application
 startApp();

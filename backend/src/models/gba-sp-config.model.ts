@@ -1,8 +1,11 @@
 import { prop } from "@typegoose/typegoose";
 
-class RefType {
+export class RefType {
 	@prop()
 	label!: string;
+
+	@prop()
+	pathToImg?: string;
 
 	@prop()
 	value!: number;
@@ -11,47 +14,24 @@ class RefType {
 	isDefault!: boolean;
 }
 
-class Type {
-	@prop({ type: RefType })
-	ref!: RefType[];
+export class ConfigType {
+	@prop()
+	title!: string;
 
 	@prop()
 	description!: string;
+
+	@prop({ type: RefType })
+	ref!: RefType[];
 
 	@prop()
 	isMultiSelection!: boolean;
 }
 
 export class GbaSPConfig {
-	@prop()
-	colorsConfigs!: ColorsConfigs;
+	@prop({ type: ConfigType })
+	colorsConfigs!: ConfigType[];
 
-	@prop({ type: Type })
-	techConfigs!: Type[];
-}
-
-class ColorsConfigs {
-	@prop()
-	shell?: Type;
-
-	@prop()
-	doubleColorsShell?: Type;
-
-	@prop()
-	screenIps?: Type;
-
-	@prop()
-	buttons?: Type;
-
-	@prop()
-	pads?: Type;
-
-	@prop()
-	strap?: Type;
-
-	@prop()
-	stickers?: Type;
-
-	@prop()
-	customInsert?: Type;
+	@prop({ type: ConfigType })
+	techConfigs!: ConfigType[];
 }

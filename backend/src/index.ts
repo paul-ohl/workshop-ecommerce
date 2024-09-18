@@ -39,6 +39,11 @@ const startApp = async () => {
     seedGbaModel();
   }
 
+  app.get("/config", async function(_req, res) {
+    const config = await GbaSPConfigModel.findOne({});
+    res.send(config);
+  })
+
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
   });

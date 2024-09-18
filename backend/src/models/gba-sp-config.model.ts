@@ -5,7 +5,10 @@ export class RefType {
 	label!: string;
 
 	@prop()
-	pathToImg?: string;
+	color?: string;
+
+	@prop()
+	path?: string;
 
 	@prop()
 	value!: number;

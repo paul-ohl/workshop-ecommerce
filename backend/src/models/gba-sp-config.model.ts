@@ -1,11 +1,33 @@
 import { prop } from "@typegoose/typegoose";
 
+class RefType {
+	@prop()
+	label!: string;
+
+	@prop()
+	value!: number;
+
+	@prop()
+	isDefault!: boolean;
+}
+
+class Type {
+	@prop({ type: RefType })
+	ref!: RefType[];
+
+	@prop()
+	description!: string;
+
+	@prop()
+	isMultiSelection!: boolean;
+}
+
 export class GbaSPConfig {
 	@prop()
 	colorsConfigs!: ColorsConfigs;
 
-	@prop()
-	techConfigs!: TechConfigs;
+	@prop({ type: Type })
+	techConfigs!: Type[];
 }
 
 class ColorsConfigs {
@@ -32,46 +54,4 @@ class ColorsConfigs {
 
 	@prop()
 	customInsert?: Type;
-}
-
-class TechConfigs {
-	@prop()
-	consoleBase?: Type;
-
-	@prop()
-	batteryUpgrade?: Type;
-
-	@prop()
-	usbC?: Type;
-
-	@prop()
-	rgbLed?: Type;
-
-	@prop()
-	ampAudio?: Type;
-
-	@prop()
-	accessories?: Type;
-}
-
-class RefType {
-	@prop()
-	label!: string;
-
-	@prop()
-	value!: number;
-
-	@prop()
-	isDefault!: boolean;
-}
-
-class Type {
-	@prop({ type: RefType })
-	ref!: RefType[];
-
-	@prop()
-	description!: string;
-
-	@prop()
-	isMultiSelection!: boolean;
 }

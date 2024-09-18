@@ -1,8 +1,7 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { getModelForClass } from "@typegoose/typegoose";
-import GbaSPConfigModel, { GbaSPConfig } from "./models/gba-sp-config.model";
+import GbaSPConfigModel from "./models/gba-sp-config.model";
 import { seedGbaModel } from "./seeding/gba-sp-config";
 
 dotenv.config();

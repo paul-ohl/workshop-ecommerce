@@ -1,6 +1,6 @@
-import { prop } from "@typegoose/typegoose";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 
-export class RefType {
+class RefType {
 	@prop()
 	label!: string;
 
@@ -17,7 +17,7 @@ export class RefType {
 	isDefault!: boolean;
 }
 
-export class ConfigType {
+class ConfigType {
 	@prop()
 	title!: string;
 
@@ -41,3 +41,7 @@ export class GbaSPConfig {
 	@prop({ type: ConfigType })
 	techConfigs!: ConfigType[];
 }
+
+const GbaSPConfigModel = getModelForClass(GbaSPConfig);
+
+export default GbaSPConfigModel;

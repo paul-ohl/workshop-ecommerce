@@ -1,10 +1,7 @@
-import { ReturnModelType } from "@typegoose/typegoose";
-import { GbaSPConfig } from "../models/gba-sp-config.model";
-import { BeAnObject } from "@typegoose/typegoose/lib/types";
-import { title } from "process";
+import GbaSPConfigModel from "../models/gba-sp-config.model";
 
-function seedGbaModel(gbaModel: ReturnModelType<typeof GbaSPConfig, BeAnObject>) {
-	gbaModel.create({
+export function seedGbaModel() {
+	GbaSPConfigModel.create({
 		colorsConfigs: [{
 			title: "Coque",
 			description: "Comprend avant et arrière",

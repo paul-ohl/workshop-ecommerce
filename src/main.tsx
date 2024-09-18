@@ -5,7 +5,7 @@ import "./index.css";
 import Home from "./components/home/Home";
 import Customization from "./components/customization/Customization";
 import Layout from "./Layout";
-
+import Admin from "./components/admin/Admin";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,6 +24,16 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Customization />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Admin />,
       },
     ],
   },

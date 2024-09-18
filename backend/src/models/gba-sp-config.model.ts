@@ -22,13 +22,16 @@ export class ConfigType {
 	title!: string;
 
 	@prop()
-	description!: string;
+	description?: string;
 
 	@prop({ type: RefType })
 	ref!: RefType[];
 
 	@prop()
 	isMultiSelection!: boolean;
+
+	@prop()
+	isBase?: boolean;
 }
 
 export class GbaSPConfig {

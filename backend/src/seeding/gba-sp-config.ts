@@ -1,6 +1,7 @@
 import { ReturnModelType } from "@typegoose/typegoose";
 import { GbaSPConfig } from "../models/gba-sp-config.model";
 import { BeAnObject } from "@typegoose/typegoose/lib/types";
+import { title } from "process";
 
 function seedGbaModel(gbaModel: ReturnModelType<typeof GbaSPConfig, BeAnObject>) {
 	gbaModel.create({
@@ -9,21 +10,53 @@ function seedGbaModel(gbaModel: ReturnModelType<typeof GbaSPConfig, BeAnObject>)
 			description: "Comprend avant et arrière",
 			ref: [{
 				label: "Clear black",
-				pathToImg: "./img/0.jpg",
-				views: [{
-					viewName: "front",
-					path: "./",
-				}, {
-					viewName: "back",
-					path: "./",
-				}, {
-					viewName: "side",
-					path: "./",
-				}],
+				color: "#000000",
+				pathToImg: "shell_#000000.jpg",
 				value: 0,
 				isDefault: true,
+			}, {
+				label: "Blue",
+				color: "#0000FF",
+				pathToImg: "shell_#0000FF.jpg",
+				value: 0,
+				isDefault: false,
 			}],
 			isMultiSelection: false,
-		}]
+			isBase: true,
+		}, {
+			title: "Boutons",
+			ref: [{
+				label: "Black",
+				color: "#000000",
+				pathToImg: "buttons_#000000.jpg",
+				value: 0,
+				isDefault: true,
+			}, {
+				label: "Blue",
+				color: "#0000FF",
+				pathToImg: "buttons_#0000FF.jpg",
+				value: 0,
+				isDefault: false,
+			}],
+			isMultiSelection: false,
+			isBase: false,
+		}],
+		techConfigs: [{
+			title: "Accessoires",
+			ref: [{
+				label: "Sacoche Metroid (+12,90$)",
+				value: 12.90,
+				isDefault: true,
+			}, {
+				label: "Verre Trempé (+4,90$)",
+				value: 4.90,
+				isDefault: true,
+			}, {
+				label: "Coque Silicone (+6,90$)",
+				value: 6.90,
+				isDefault: false,
+			}],
+			isMultiSelection: true
+		}],
 	})
 }

@@ -28,15 +28,15 @@ export class ConfigService {
 			throw new Error(`Config element not found (id: ${id})`);
 		}
 
-		let { title } = updateData;
-		console.log(`"${title}"`);
-
+		let { title, refs } = updateData;
 		if (title != undefined && title.trim() === "") {
 			throw new Error("Title is required");
 		}
+		if (refs != undefined && refs.length === 0) {
+			throw new Error("Refs is required");
+		}
 
 		Object.assign(element, updateData);
-
 		await config.save();
 
 		return element;

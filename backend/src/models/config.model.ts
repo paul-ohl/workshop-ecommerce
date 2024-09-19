@@ -1,4 +1,4 @@
-import { DocumentType, getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 import { Types } from "mongoose";
 
 class RefType {
@@ -8,7 +8,7 @@ class RefType {
 	@prop({
 		validate: {
 			validator: (v) => {
-				return /^#[0-9a-fA-F]{6}$/gm.test(v);
+				return /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/gm.test(v);
 			}
 		}
 	})

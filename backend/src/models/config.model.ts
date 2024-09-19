@@ -1,23 +1,39 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { Types } from "mongoose";
 
 class RefType {
 	@prop()
 	label!: string;
 
-	@prop()
+	@prop({
+		validate: {
+			validator: (v) => {
+				return /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/gm.test(v);
+			}
+		}
+	})
 	color?: string;
 
 	@prop()
 	path?: string;
 
-	@prop()
+	@prop({
+		validate: {
+			validator: (v) => {
+				return v >= 0;
+			}
+		}
+	})
 	value!: number;
 
 	@prop()
 	isDefault!: boolean;
 }
 
-class ConfigType {
+export class ConfigElement {
+	@prop({ required: true, type: () => Types.ObjectId })
+	public _id!: Types.ObjectId;
+
 	@prop()
 	title!: string;
 
@@ -25,7 +41,7 @@ class ConfigType {
 	description?: string;
 
 	@prop({ type: RefType })
-	ref!: RefType[];
+	refs!: RefType[];
 
 	@prop()
 	isMultiSelection!: boolean;
@@ -35,11 +51,11 @@ class ConfigType {
 }
 
 export class Config {
-	@prop({ type: ConfigType })
-	colorsConfigs!: ConfigType[];
+	@prop({ type: ConfigElement })
+	colorsConfigs!: ConfigElement[];
 
-	@prop({ type: ConfigType })
-	techConfigs!: ConfigType[];
+	@prop({ type: ConfigElement })
+	techConfigs!: ConfigElement[];
 }
 
 const ConfigModel = getModelForClass(Config);

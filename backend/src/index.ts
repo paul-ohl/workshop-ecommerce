@@ -1,8 +1,9 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import GbaSPConfigModel from "./models/gba-sp-config.model";
-import { seedGbaModel } from "./seeding/gba-sp-config";
+import ConfigModel from "./models/config.model";
+import { seedConfig } from "./services/config-seed";
+import router from "./routes/router";
 
 dotenv.config();
 
@@ -33,11 +34,13 @@ const startApp = async () => {
   await connectToDatabase();  // Connexion à MongoDB
 
   // SeedGbaModel if the db hasn't been seeded
-  const config = await GbaSPConfigModel.find({})
+  const config = await ConfigModel.find({})
   if (config.length === 0) {
     console.log("Seeding database.")
-    seedGbaModel();
+    seedConfig();
   }
+
+  app.use('/', router);
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);

@@ -1,7 +1,7 @@
-import GbaSPConfigModel from "../models/gba-sp-config.model";
+import ConfigModel from "../models/config.model";
 
-export function seedGbaModel() {
-	GbaSPConfigModel.create({
+export function seedConfig() {
+	ConfigModel.create({
 		colorsConfigs: [{
 			title: "Coque",
 			description: "Comprend avant et arrière",

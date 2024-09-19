@@ -26,8 +26,8 @@ class RefType {
 	})
 	value!: number;
 
-	@prop()
-	isDefault!: boolean;
+	@prop({ default: false })
+	isDefault?: boolean;
 }
 
 export class ConfigElement {
@@ -37,7 +37,7 @@ export class ConfigElement {
 	@prop()
 	title!: string;
 
-	@prop()
+	@prop({ default: "" })
 	description?: string;
 
 	@prop({ type: RefType })
@@ -46,7 +46,7 @@ export class ConfigElement {
 	@prop()
 	isMultiSelection!: boolean;
 
-	@prop()
+	@prop({ default: false })
 	isBase?: boolean;
 }
 

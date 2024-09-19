@@ -9,13 +9,13 @@ export function seedConfig() {
 			refs: [{
 				label: "Clear black",
 				color: "#000000",
-				pathToImg: "shell_#000000.jpg",
+				pathToImg: "shell_000000.jpg",
 				value: 0,
 				isDefault: true,
 			}, {
 				label: "Blue",
 				color: "#0000FF",
-				pathToImg: "shell_#0000FF.jpg",
+				pathToImg: "shell_0000FF.jpg",
 				value: 0,
 				isDefault: false,
 			}],
@@ -26,13 +26,13 @@ export function seedConfig() {
 			refs: [{
 				label: "Black",
 				color: "#000000",
-				pathToImg: "buttons_#000000.jpg",
+				pathToImg: "buttons_000000.jpg",
 				value: 0,
 				isDefault: true,
 			}, {
 				label: "Blue",
 				color: "#0000FF",
-				pathToImg: "buttons_#0000FF.jpg",
+				pathToImg: "buttons_0000FF.jpg",
 				value: 0,
 				isDefault: false,
 			}],
@@ -44,19 +44,19 @@ export function seedConfig() {
 			refs: [{
 				label: "Lear Black",
 				color: "#000000",
-				pathToImg: "double_shell_#000000.png",
+				pathToImg: "double_shell_000000.png",
 				value: 11.90,
 				isDefault: false,
 			}, {
 				label: "Clear Blue",
 				color: "#0000FF",
-				pathToImg: "double_shell_#0000FF.png",
+				pathToImg: "double_shell_0000FF.png",
 				value: 11.90,
 				isDefault: false,
 			}, {
 				label: "Jaune",
 				color: "#FFFF00",
-				pathToImg: "double_shell_#FFFF00.png",
+				pathToImg: "double_shell_FFFF00.png",
 				value: 11.90,
 				isDefault: false,
 			}, {

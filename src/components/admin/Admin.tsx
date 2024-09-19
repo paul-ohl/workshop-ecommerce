@@ -1,6 +1,6 @@
 
-import TechConfig from "./TechConfig";
-import ColorConfig  from "./ColorConfig";
+import TechConfig from "./TechConfig/TechConfig";
+import ColorConfig  from "./ColorConfig/ColorConfig";
 const Admin = () => {
 
 

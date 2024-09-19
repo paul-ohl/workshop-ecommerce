@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import ConfigModel from "../models/config.model";
 
 export function seedConfig() {
@@ -34,6 +35,34 @@ export function seedConfig() {
 				pathToImg: "buttons_#0000FF.jpg",
 				value: 0,
 				isDefault: false,
+			}],
+			isMultiSelection: false,
+			isBase: false,
+		}, {
+			title: "Coque Double Couleurs",
+			description: "Uniquement si la coque basse est différente de la haute",
+			refs: [{
+				label: "Lear Black",
+				color: "#000000",
+				pathToImg: "double_shell_#000000.png",
+				value: 11.90,
+				isDefault: false,
+			}, {
+				label: "Clear Blue",
+				color: "#0000FF",
+				pathToImg: "double_shell_#0000FF.png",
+				value: 11.90,
+				isDefault: false,
+			}, {
+				label: "Jaune",
+				color: "#FFFF00",
+				pathToImg: "double_shell_#FFFF00.png",
+				value: 11.90,
+				isDefault: false,
+			}, {
+				label: "Sans",
+				value: 0,
+				isDefault: true,
 			}],
 			isMultiSelection: false,
 			isBase: false,

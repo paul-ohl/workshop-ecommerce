@@ -6,6 +6,8 @@ import Home from "./components/home/Home";
 import Customization from "./components/customization/Customization";
 import Layout from "./Layout";
 import Admin from "./components/admin/Admin";
+import { QueryClient, QueryClientProvider } from "react-query";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,9 +40,11 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
+const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </QueryClientProvider>
 );

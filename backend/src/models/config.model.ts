@@ -31,7 +31,7 @@ class RefType {
 }
 
 export class ConfigElement {
-	@prop({ required: true, type: () => Types.ObjectId })
+	@prop({ type: () => Types.ObjectId, default: () => new Types.ObjectId() })
 	public _id!: Types.ObjectId;
 
 	@prop()

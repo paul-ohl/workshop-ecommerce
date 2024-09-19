@@ -17,8 +17,7 @@ if (!port) {
   throw new Error("PORT is not defined in the .env file");
 }
 
-const app: Express = express();
-app.use(express.json(), cors());
+app.use(cors());
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -46,7 +45,6 @@ const startApp = async () => {
     seedConfig();
   }
 
-  app.use("/", router);
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);

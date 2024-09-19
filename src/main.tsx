@@ -7,6 +7,8 @@ import CustomizationPage from "./components/customization/CustomizationPage";
 import Layout from "./Layout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Admin from "./components/admin/Admin";
+import { QueryClient, QueryClientProvider } from "react-query";
+
 const router = createBrowserRouter([
   {
     path: "/",

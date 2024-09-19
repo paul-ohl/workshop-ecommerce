@@ -5,7 +5,7 @@ export function seedConfig() {
 		colorsConfigs: [{
 			title: "Coque",
 			description: "Comprend avant et arrière",
-			ref: [{
+			refs: [{
 				label: "Clear black",
 				color: "#000000",
 				pathToImg: "shell_#000000.jpg",
@@ -22,7 +22,7 @@ export function seedConfig() {
 			isBase: true,
 		}, {
 			title: "Boutons",
-			ref: [{
+			refs: [{
 				label: "Black",
 				color: "#000000",
 				pathToImg: "buttons_#000000.jpg",
@@ -40,7 +40,7 @@ export function seedConfig() {
 		}],
 		techConfigs: [{
 			title: "Accessoires",
-			ref: [{
+			refs: [{
 				label: "Sacoche Metroid (+12,90$)",
 				value: 12.90,
 				isDefault: true,

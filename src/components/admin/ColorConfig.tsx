@@ -71,7 +71,7 @@ const ColorConfig = () => {
                           <th>
                               <button className="btn btn-warning btn-xs mr-2"
                                onClick={() => setEditOpen(true)}>
-                                  Modifié
+                                  Modifier
                               </button>
 
                               <button

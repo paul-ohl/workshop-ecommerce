@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import ConfigModel, { ConfigElement } from "../models/config.model";
 
 export class ConfigService {
@@ -40,5 +41,40 @@ export class ConfigService {
 		await config.save();
 
 		return element;
+	}
+
+	public async createConfigElement(configSection: string, data: ConfigElement) {
+		const config = await ConfigModel.findOne();
+		if (!config) {
+			throw new Error(`Critical error: no config found`);
+		}
+
+		if (data.title == undefined || data.title.trim() === "") {
+			throw new Error("Title is required");
+		}
+		if (data.refs == undefined || data.refs.length === 0) {
+			throw new Error("Refs is required");
+		}
+		if (data._id != undefined) {
+			throw new Error("Id should not be provided");
+		}
+		if (data.isMultiSelection == undefined) {
+			throw new Error("isMultiSelection is required");
+		}
+
+		const newConfigElement = {
+			...data,
+		};
+
+		if (configSection === 'color') {
+			config.colorsConfigs.push(newConfigElement);
+		} else if (configSection === 'tech') {
+			config.techConfigs.push(newConfigElement);
+		} else {
+			throw new Error("Invalid config section");
+		}
+
+		await config.save();
+		return config;
 	}
 }

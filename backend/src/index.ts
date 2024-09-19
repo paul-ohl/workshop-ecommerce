@@ -1,9 +1,8 @@
-import express, { Express } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import ConfigModel from "./models/config.model";
 import { seedConfig } from "./services/config-seed";
-import router from "./routes/router";
+import app from "./app";
 
 dotenv.config();
 
@@ -17,8 +16,6 @@ if (!port) {
   throw new Error("PORT is not defined in the .env file");
 }
 
-const app: Express = express();
-app.use(express.json());
 
 const connectToDatabase = async () => {
   try {
@@ -40,7 +37,6 @@ const startApp = async () => {
     seedConfig();
   }
 
-  app.use('/', router);
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);

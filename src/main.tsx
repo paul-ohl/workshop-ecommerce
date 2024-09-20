@@ -3,8 +3,9 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Home from "./components/home/Home";
-import Customization from "./components/customization/Customization";
+import CustomizationPage from "./components/customization/CustomizationPage";
 import Layout from "./Layout";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const router = createBrowserRouter([
   {
@@ -18,19 +19,23 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/ndsl-personnaliser",
+    path: "/gameboy-advance-sp-personnaliser",
     element: <Layout />,
     children: [
       {
         index: true,
-        element: <Customization />,
+        element: <CustomizationPage />,
       },
     ],
   },
 ]);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </QueryClientProvider>
 );

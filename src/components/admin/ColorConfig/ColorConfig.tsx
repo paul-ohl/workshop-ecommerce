@@ -155,11 +155,11 @@ const ColorConfig = () => {
         </div>
       </div>
 
-      {/* <EditDialog
+     <EditDialog
         open={editOpen}
         onClose={handleCloseEditDialog}
         configId={selectedId}
-      /> */}
+      />
       <AddDialog
         open={addOpen}
         onClose={handleCloseAddDialog}

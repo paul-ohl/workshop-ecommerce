@@ -11,7 +11,7 @@ import { useQuery } from "react-query";
 interface EditDialogProps {
   open: boolean;
   onClose: () => void;
-  configId: string | null; // Recevoir configId
+  configId: string | null;
 }
 
 const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
@@ -19,6 +19,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    isMultiSelection: false,
   });
   const [isModified, setIsModified] = useState(false);
   const [techConfig, setTechConfig] = useState<any>(null);
@@ -45,6 +46,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
         setFormData({
           title: foundConfig.title,
           description: foundConfig.description || "",
+          isMultiSelection: foundConfig.isMultiSelection || false,
         });
         setAccordionItems(foundConfig.refs || []);
         setInitialTitle(foundConfig.title);
@@ -68,6 +70,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
       setFormData({
         title: techConfig.title,
         description: techConfig.description || "",
+        isMultiSelection: techConfig.isMultiSelection || false,
       });
       setAccordionItems(techConfig.refs || []);
       setIsModified(false);
@@ -104,19 +107,23 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value, 
     }));
+
     setIsModified(true);
   };
+
 
   // Fonction de soumission du formulaire
   const handleSubmit = async () => {
     const payload = {
       title: formData.title,
       description: formData.description,
+      isMultiSelection: formData.isMultiSelection,
       refs: accordionItems.map((item) => ({
         label: item.label,
         value: item.value,
@@ -200,6 +207,20 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
                           className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Sélection multiple
+                        </label>
+                        <input
+                          type="checkbox"
+                          name="isMultiSelection"
+                          checked={formData.isMultiSelection}
+                          onChange={handleInputChange}
+                          className="checkbox"
+                        />
+                      </div>
+
                       <button
                         type="button"
                         className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"

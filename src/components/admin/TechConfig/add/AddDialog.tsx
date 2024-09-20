@@ -9,7 +9,7 @@ import AddAccordionItem from "./AddAccordionItem";
 
 interface AddDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose: () => void; // Fonction pour fermer et rafraîchir
 }
 
 const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
@@ -20,6 +20,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
     isMultiSelection: false,
   });
 
+  // Ajouter un élément d'accordéon
   const addAccordionItem = () => {
     setAccordionItems([
       ...accordionItems,
@@ -32,11 +33,12 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
     ]);
   };
 
+  // Supprimer un élément d'accordéon
   const removeAccordionItem = (id: string) => {
     setAccordionItems(accordionItems.filter((item) => item._id !== id));
   };
 
-  // Gérer le changement des valeurs dans les items d'accordéon
+  // Gérer les changements dans les items d'accordéon
   const handleAccordionItemChange = (
     id: string,
     field: string,
@@ -76,7 +78,16 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
       if (response.ok) {
         const newConfig = await response.json();
         console.log("Création réussie :", newConfig);
-        onClose(); // Ferme la modale après l'ajout réussi
+
+        // Réinitialiser le formulaire
+        setFormData({
+          title: "",
+          description: "",
+          isMultiSelection: false,
+        });
+        setAccordionItems([]); // Réinitialiser les éléments d'accordéon
+
+        onClose(); // Fermer la modale et rafraîchir les données
       } else {
         console.error("Erreur lors de la création de la configuration");
       }
@@ -85,7 +96,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
     }
   };
 
-  // Gestion du changement pour les inputs texte
+  // Gestion du changement pour les inputs texte et checkbox
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -93,6 +104,13 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      isMultiSelection: e.target.checked,
     }));
   };
 
@@ -141,6 +159,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
                           className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
+
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">
                           Sélection multiple
@@ -149,12 +168,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
                           type="checkbox"
                           name="isMultiSelection"
                           checked={formData.isMultiSelection}
-                          onChange={(e) =>
-                            setFormData((prevData) => ({
-                              ...prevData,
-                              isMultiSelection: e.target.checked,
-                            }))
-                          }
+                          onChange={handleCheckboxChange}
                           className="checkbox"
                         />
                       </div>
@@ -176,7 +190,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
                             value={item.value}
                             isDefault={item.isDefault}
                             path={item.path}
-                            onChange={handleAccordionItemChange} 
+                            onChange={handleAccordionItemChange}
                             onRemove={() => removeAccordionItem(item._id)}
                           />
                         ))}

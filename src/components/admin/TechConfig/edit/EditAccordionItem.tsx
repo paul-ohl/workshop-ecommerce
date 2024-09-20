@@ -15,7 +15,6 @@ const EditAccordionItem: React.FC<AccordionItemProps> = ({
   title,
   value = 0,
   isDefault = false,
-  path = "",
   onRemove,
   onChange,
 }) => {
@@ -86,16 +85,7 @@ const EditAccordionItem: React.FC<AccordionItemProps> = ({
           />
         </div>
 
-              {/* <div className="grid grid-cols-3 gap-4">
-          {["front", "back", "side"].map((position) => (
-            <ImageUploader
-              key={position}
-              path={path}
-              position={position}
-              onImageChange={handleImageChange}
-            />
-          ))}
-        </div> */}
+  
 
       </div>
     </div>

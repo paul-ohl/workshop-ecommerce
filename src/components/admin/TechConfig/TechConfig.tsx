@@ -47,9 +47,15 @@ const TechConfig = () => {
     setEditOpen(true);
   };
 
-  // Fonction pour rafraîchir les données après fermeture de la modale
+  // Fonction pour rafraîchir les données après fermeture de la modale EditDialog
   const handleCloseEditDialog = () => {
     setEditOpen(false);
+    queryClient.invalidateQueries("configsData"); // Invalider la requête pour refetch les données
+  };
+
+  // Fonction pour rafraîchir les données après fermeture de la modale AddDialog
+  const handleCloseAddDialog = () => {
+    setAddOpen(false);
     queryClient.invalidateQueries("configsData"); // Invalider la requête pour refetch les données
   };
 
@@ -144,10 +150,13 @@ const TechConfig = () => {
 
       <EditDialog
         open={editOpen}
-        onClose={handleCloseEditDialog} // Appel de la fonction lors de la fermeture
+        onClose={handleCloseEditDialog} 
         configId={selectedId}
       />
-      <AddDialog open={addOpen} onClose={() => setAddOpen(false)} />
+      <AddDialog
+        open={addOpen}
+        onClose={handleCloseAddDialog}
+      />
       <DeleteDialog open={open} onClose={() => setOpen(false)} />
     </>
   );

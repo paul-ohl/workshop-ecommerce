@@ -74,6 +74,35 @@ export class ConfigService {
 			throw new Error("Invalid config section");
 		}
 
+		if (images) {
+			const processedImages = req.files.map((file, index) => {
+				if (file) {
+					// Vérifiez le type de fichier (extension)
+					if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+						throw new Error(`Le fichier ${file.originalname} doit être de type JPG ou PNG.`);
+					}
+
+					// Générez une suite de nombres aléatoires
+					const randomNumbers = Math.random().toString(36).substring(2, 8);
+					// Obtenez l'extension du fichier
+					const fileExtension = file.originalname.replace(/\s+/g, '_');
+					// Concaténez la suite de nombres avec le nom d'origine du fichier
+					file.originalname = `${randomNumbers}-${fileExtension}`;
+
+					// Enregistrez le fichier dans votre système de fichiers (dans le dossier 'uploads')
+					const uploadPath = __dirname + '/../uploads/' + file.originalname; // Chemin du fichier dans votre système de fichiers
+					// Écrivez le fichier sur le disque
+					fs.writeFileSync(uploadPath, file.buffer);
+
+					// Retournez le chemin d'accès au fichier téléchargé
+					return `/uploads/${file.originalname}`;
+				} else {
+					// Si le fichier n'existe pas, retournez undefined
+					return undefined;
+				}
+			});
+		}
+
 		await config.save();
 		return config;
 	}

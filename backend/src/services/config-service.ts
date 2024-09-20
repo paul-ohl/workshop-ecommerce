@@ -59,14 +59,14 @@ export class ConfigService {
 			throw new Error("Id should not be provided");
 		}
 		if (data.isMultiSelection == undefined) {
-			throw new Error("isMultiSelection is required");
+			throw new Error("IsMultiSelection is required");
 		}
 
 		const newConfigElement = {
 			...data,
 		};
 
-		if (configSection === 'color') {
+		if (configSection === 'colors') {
 			config.colorsConfigs.push(newConfigElement);
 		} else if (configSection === 'tech') {
 			config.techConfigs.push(newConfigElement);

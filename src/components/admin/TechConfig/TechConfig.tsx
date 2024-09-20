@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import "react-color-palette/css";
 import EditDialog from "./edit/EditDialog";
 import AddDialog from "./add/AddDialog";
 import DeleteDialog from "./DeleteDialog";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 // Hook pour récupérer les configurations
 const useGetAllConfigs = () => {
@@ -15,16 +14,18 @@ const useGetAllConfigs = () => {
 };
 
 const TechConfig = () => {
+  const queryClient = useQueryClient(); // Accéder au QueryClient
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null); // État pour stocker l'ID sélectionné
 
   // Récupération des données
   const { data, error, isLoading } = useGetAllConfigs();
 
   useEffect(() => {
     if (data) {
-      console.log("Fetched Color Config Data:", data);
+      console.log("Fetched Tech Config Data:", data);
     }
   }, [data]);
 
@@ -37,12 +38,27 @@ const TechConfig = () => {
     return <div>Error loading data</div>;
   }
 
-  // Accès aux colorConfigs
+  // Accès aux techConfigs
   const techConfigs = data?.[0]?.techConfigs || [];
+
+  // Fonction pour gérer l'ouverture du modal et définir l'ID sélectionné
+  const handleEdit = (id: string) => {
+    setSelectedId(id);
+    setEditOpen(true);
+  };
+
+  // Fonction pour rafraîchir les données après fermeture de la modale
+  const handleCloseEditDialog = () => {
+    setEditOpen(false);
+    queryClient.invalidateQueries("configsData"); // Invalider la requête pour refetch les données
+  };
 
   return (
     <>
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div
+        role="tabpanel"
+        className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+      >
         <div className="flex items-center gap-4 mb-5">
           <label className="input input-bordered flex items-center gap-2 rounded-badge w-50 input-sm">
             <input
@@ -83,14 +99,14 @@ const TechConfig = () => {
             </thead>
             <tbody>
               {techConfigs.length > 0 ? (
-                techConfigs.map((colorConf: any) => (
-                  <tr key={colorConf._id}>
+                techConfigs.map((techConf: any) => (
+                  <tr key={techConf._id}>
                     <td>
-                      <div className="font-bold">{colorConf.title}</div>
+                      <div className="font-bold">{techConf.title}</div>
                     </td>
-                    <td>{colorConf.description || ""}</td>
+                    <td>{techConf.description || ""}</td>
                     <td>
-                      {colorConf.refs?.map((ref: any) => (
+                      {techConf.refs?.map((ref: any) => (
                         <span
                           key={ref._id}
                           className="badge badge-ghost badge-sm m-2 p-2.5 flex items-center"
@@ -103,7 +119,7 @@ const TechConfig = () => {
                     <th>
                       <button
                         className="btn btn-warning btn-xs mr-2"
-                        onClick={() => setEditOpen(true)}
+                        onClick={() => handleEdit(techConf._id)}
                       >
                         Modifier
                       </button>
@@ -118,7 +134,7 @@ const TechConfig = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4}>Aucune configure technique</td>
+                  <td colSpan={4}>Aucune configuration technique</td>
                 </tr>
               )}
             </tbody>
@@ -126,7 +142,11 @@ const TechConfig = () => {
         </div>
       </div>
 
-      <EditDialog open={editOpen} onClose={() => setEditOpen(false)} />
+      <EditDialog
+        open={editOpen}
+        onClose={handleCloseEditDialog} // Appel de la fonction lors de la fermeture
+        configId={selectedId}
+      />
       <AddDialog open={addOpen} onClose={() => setAddOpen(false)} />
       <DeleteDialog open={open} onClose={() => setOpen(false)} />
     </>

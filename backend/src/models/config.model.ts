@@ -2,8 +2,8 @@ import { getModelForClass, prop } from "@typegoose/typegoose";
 import { Types } from "mongoose";
 
 class RefType {
-	@prop()
-	label!: string;
+  @prop()
+  label!: string;
 
 	@prop({
 		validate: {
@@ -14,8 +14,8 @@ class RefType {
 	})
 	color?: string;
 
-	@prop()
-	path?: string;
+  @prop()
+  pathToImg?: string;
 
 	@prop({
 		validate: {
@@ -43,8 +43,8 @@ export class ConfigElement {
 	@prop({ type: RefType })
 	refs!: RefType[];
 
-	@prop()
-	isMultiSelection!: boolean;
+  @prop()
+  isMultiSelection!: boolean;
 
 	@prop({ default: false })
 	isBase?: boolean;

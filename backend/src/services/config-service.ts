@@ -1,5 +1,7 @@
 import { Types } from "mongoose";
 import ConfigModel, { ConfigElement } from "../models/config.model";
+import { MyImageData, PutConfigElement, PutRefType } from "../models/put-config.model";
+import fs from 'fs';
 
 export class ConfigService {
 	public async getAll() {
@@ -43,7 +45,7 @@ export class ConfigService {
 		return element;
 	}
 
-	public async createConfigElement(configSection: string, data: ConfigElement) {
+	public async createConfigElement(configSection: string, data: PutConfigElement) {
 		const config = await ConfigModel.findOne();
 		if (!config) {
 			throw new Error(`Critical error: no config found`);
@@ -55,15 +57,19 @@ export class ConfigService {
 		if (data.refs == undefined || data.refs.length === 0) {
 			throw new Error("Refs is required");
 		}
-		if (data._id != undefined) {
-			throw new Error("Id should not be provided");
-		}
 		if (data.isMultiSelection == undefined) {
 			throw new Error("IsMultiSelection is required");
 		}
 
-		const newConfigElement = {
-			...data,
+		const refs = uploadImages(data.refs);
+
+		const newConfigElement: ConfigElement = {
+			_id: new Types.ObjectId(),
+			title: data.title,
+			description: data.description,
+			refs,
+			isMultiSelection: data.isMultiSelection,
+			isBase: data.isBase,
 		};
 
 		if (configSection === 'colors') {
@@ -74,36 +80,38 @@ export class ConfigService {
 			throw new Error("Invalid config section");
 		}
 
-		if (images) {
-			const processedImages = req.files.map((file, index) => {
-				if (file) {
-					// Vérifiez le type de fichier (extension)
-					if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-						throw new Error(`Le fichier ${file.originalname} doit être de type JPG ou PNG.`);
-					}
-
-					// Générez une suite de nombres aléatoires
-					const randomNumbers = Math.random().toString(36).substring(2, 8);
-					// Obtenez l'extension du fichier
-					const fileExtension = file.originalname.replace(/\s+/g, '_');
-					// Concaténez la suite de nombres avec le nom d'origine du fichier
-					file.originalname = `${randomNumbers}-${fileExtension}`;
-
-					// Enregistrez le fichier dans votre système de fichiers (dans le dossier 'uploads')
-					const uploadPath = __dirname + '/../uploads/' + file.originalname; // Chemin du fichier dans votre système de fichiers
-					// Écrivez le fichier sur le disque
-					fs.writeFileSync(uploadPath, file.buffer);
-
-					// Retournez le chemin d'accès au fichier téléchargé
-					return `/uploads/${file.originalname}`;
-				} else {
-					// Si le fichier n'existe pas, retournez undefined
-					return undefined;
-				}
-			});
-		}
-
 		await config.save();
 		return config;
 	}
+}
+
+function uploadImages(refs: PutRefType[]) {
+	return refs.map(ref => {
+		const randomNumbers = Math.random().toString(36).substring(2, 8);
+		let lastExtension = "";
+		ref.images.map(image => {
+			const { side, file } = image;
+			if (file.content == undefined) {
+				throw new Error("Image content is required");
+			}
+			if (file.extension == undefined) {
+				throw new Error("Image extension is required");
+			}
+			if (lastExtension != "" && lastExtension != file.extension) {
+				throw new Error("All images of a same ref must have the same extension");
+			} else {
+				lastExtension = file.extension;
+			}
+
+			const uploadPath = __dirname + '/../src/assets/' + side + '/' + randomNumbers + '.' + file.extension;
+
+			// if file already exists, delete it
+			if (fs.existsSync(uploadPath)) {
+				fs.rmSync(uploadPath);
+			}
+			const buffer = Buffer.from(file.content);
+			fs.writeFileSync(uploadPath, buffer);
+		});
+		return randomNumbers + '.' + lastExtension;
+	});
 }

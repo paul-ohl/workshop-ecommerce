@@ -84,6 +84,16 @@ const AddAccordionItem: React.FC<AccordionItemProps> = ({
             className="checkbox"
           />
         </div>
+                      {/* <div className="grid grid-cols-3 gap-4">
+          {["front", "back", "side"].map((position) => (
+            <ImageUploader
+              key={position}
+              path={path}
+              position={position}
+              onImageChange={handleImageChange}
+            />
+          ))}
+        </div> */}
       </div>
     </div>
   );

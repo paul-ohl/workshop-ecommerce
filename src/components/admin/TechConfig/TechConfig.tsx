@@ -40,6 +40,24 @@ const TechConfig = () => {
   // Accès aux colorConfigs
   const techConfigs = data?.[0]?.techConfigs || [];
 
+  // Fonction pour gérer l'ouverture du modal et définir l'ID sélectionné
+  const handleEdit = (id: string) => {
+    setSelectedId(id);
+    setEditOpen(true);
+  };
+
+  // Fonction pour rafraîchir les données après fermeture de la modale EditDialog
+  const handleCloseEditDialog = () => {
+    setEditOpen(false);
+    queryClient.invalidateQueries("configsData"); // Invalider la requête pour refetch les données
+  };
+
+  // Fonction pour rafraîchir les données après fermeture de la modale AddDialog
+  const handleCloseAddDialog = () => {
+    setAddOpen(false);
+    queryClient.invalidateQueries("configsData"); // Invalider la requête pour refetch les données
+  };
+
   return (
     <>
       <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
@@ -126,8 +144,15 @@ const TechConfig = () => {
         </div>
       </div>
 
-      <EditDialog open={editOpen} onClose={() => setEditOpen(false)} />
-      <AddDialog open={addOpen} onClose={() => setAddOpen(false)} />
+      <EditDialog
+        open={editOpen}
+        onClose={handleCloseEditDialog} 
+        configId={selectedId}
+      />
+      <AddDialog
+        open={addOpen}
+        onClose={handleCloseAddDialog}
+      />
       <DeleteDialog open={open} onClose={() => setOpen(false)} />
     </>
   );

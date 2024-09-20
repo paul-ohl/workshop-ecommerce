@@ -10,6 +10,8 @@ interface AccordionItemProps {
 const EditAccordionItem: React.FC<AccordionItemProps> = ({
   id,
   title,
+  value = 0,
+  isDefault = false,
   onRemove,
 }) => {
   const [images, setImages] = useState({
@@ -75,139 +77,8 @@ const EditAccordionItem: React.FC<AccordionItemProps> = ({
           <input type="checkbox" defaultChecked className="checkbox" />
         </div>
 
+  
 
-        <div className="">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Images
-          </label>
-          <div className="grid grid-cols-3 gap-4">
-            {/* Front */}
-            <div className="text-center">
-              <div className="relative mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25">
-                {!images.front ? (
-                  <label className="relative cursor-pointer w-full rounded-lg bg-white font-semibold text-indigo-600">
-                    <div className="text-center mx-3 my-5 rounded-lg">
-                      <PhotoIcon
-                        aria-hidden="true"
-                        className="mx-auto h-12 w-12 text-gray-300"
-                      />
-                      <input
-                        type="file"
-                        className="sr-only"
-                        onChange={(e) => handleImageUpload("front", e)}
-                      />
-                      <span>Upload a file</span>
-                      <p className="text-xs leading-5 text-gray-600">
-                        PNG, JPG, GIF up to 10MB
-                      </p>
-                    </div>
-                  </label>
-                ) : (
-                  <div className="relative w-full h-36 m-1">
-                    <img
-                      src={images.front}
-                      alt="Uploaded"
-                      className="object-contain h-full w-full rounded-lg"
-                    />
-                    <div
-                      className="absolute inset-0 flex items-center opacity-0 hover:opacity-100 justify-center rounded-lg cursor-pointer bg-red-400 bg-opacity-0 hover:bg-opacity-75 transition-opacity"
-                      onClick={() => handleRemoveImage("front")}
-                    >
-                      <TrashIcon className="h-12 w-12 text-white" />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <label className="block text-sm m-1 font-medium leading-6 text-gray-900">
-                Devant
-              </label>
-            </div>
-
-            {/* Back */}
-            <div className="text-center">
-              <div className="relative mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25">
-                {!images.back ? (
-                  <label className="relative cursor-pointer w-full rounded-lg bg-white font-semibold text-indigo-600">
-                    <div className="text-center mx-3 my-5 rounded-lg">
-                      <PhotoIcon
-                        aria-hidden="true"
-                        className="mx-auto h-12 w-12 text-gray-300"
-                      />
-                      <input
-                        type="file"
-                        className="sr-only"
-                        onChange={(e) => handleImageUpload("back", e)}
-                      />
-                      <span>Upload a file</span>
-                      <p className="text-xs leading-5 text-gray-600">
-                        PNG, JPG, GIF up to 10MB
-                      </p>
-                    </div>
-                  </label>
-                ) : (
-                  <div className="relative w-full h-36 m-1">
-                    <img
-                      src={images.back}
-                      alt="Uploaded"
-                      className="object-contain h-full w-full rounded-lg"
-                    />
-                    <div
-                      className="absolute inset-0 flex items-center opacity-0 hover:opacity-100 justify-center rounded-lg cursor-pointer bg-red-400 bg-opacity-0 hover:bg-opacity-75 transition-opacity"
-                      onClick={() => handleRemoveImage("back")}
-                    >
-                      <TrashIcon className="h-12 w-12 text-white" />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <label className="block text-sm m-1 font-medium leading-6 text-gray-900">
-                Derrière
-              </label>
-            </div>
-
-            {/* Side */}
-            <div className="text-center">
-              <div className="relative mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25">
-                {!images.side ? (
-                  <label className="relative cursor-pointer w-full rounded-lg bg-white font-semibold text-indigo-600">
-                    <div className="text-center mx-3 my-5 rounded-lg">
-                      <PhotoIcon
-                        aria-hidden="true"
-                        className="mx-auto h-12 w-12 text-gray-300"
-                      />
-                      <input
-                        type="file"
-                        className="sr-only"
-                        onChange={(e) => handleImageUpload("side", e)}
-                      />
-                      <span>Upload a file</span>
-                      <p className="text-xs leading-5 text-gray-600">
-                        PNG, JPG, GIF up to 10MB
-                      </p>
-                    </div>
-                  </label>
-                ) : (
-                  <div className="relative w-full h-36 m-1">
-                    <img
-                      src={images.side}
-                      alt="Uploaded"
-                      className="object-contain h-full w-full rounded-lg"
-                    />
-                    <div
-                      className="absolute inset-0 flex items-center opacity-0 hover:opacity-100 justify-center rounded-lg cursor-pointer bg-red-400 bg-opacity-0 hover:bg-opacity-75 transition-opacity"
-                      onClick={() => handleRemoveImage("side")}
-                    >
-                      <TrashIcon className="h-12 w-12 text-white" />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <label className="block text-sm m-1 font-medium leading-6 text-gray-900">
-                Coté
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

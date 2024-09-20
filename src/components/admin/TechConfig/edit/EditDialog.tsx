@@ -6,16 +6,85 @@ import {
   } from "@headlessui/react";
   import { useState } from "react";
 import EditAccordionItem from "./EditAccordionItem";
-  interface AddDialogProps {
-    open: boolean;
-    onClose: () => void;
+import { useQuery } from "react-query";
+
+interface EditDialogProps {
+  open: boolean;
+  onClose: () => void;
+  configId: string | null;
+}
+
+const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
+  const [accordionItems, setAccordionItems] = useState<any[]>([]);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    isMultiSelection: false,
+  });
+  const [isModified, setIsModified] = useState(false);
+  const [techConfig, setTechConfig] = useState<any>(null);
+  const [initialTitle, setInitialTitle] = useState("");
+
+  const useGetAllConfigs = () => {
+    return useQuery(
+      "configsData",
+      async () =>
+        await fetch("http://localhost:3000/config").then((res) => res.json())
+    );
+  };
+
+  const { data, error, isLoading } = useGetAllConfigs();
+
+  useEffect(() => {
+    if (data && configId) {
+      const foundConfig = data?.[0]?.techConfigs?.find(
+        (conf: any) => conf._id === configId
+      );
+
+      if (foundConfig) {
+        setTechConfig(foundConfig);
+        setFormData({
+          title: foundConfig.title,
+          description: foundConfig.description || "",
+          isMultiSelection: foundConfig.isMultiSelection || false,
+        });
+        setAccordionItems(foundConfig.refs || []);
+        setInitialTitle(foundConfig.title);
+      } else {
+        console.log("Aucune configuration trouvée pour cet ID");
+      }
+    }
+  }, [data, configId]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
-  const EditDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
+  if (error) {
+    console.log("Error fetching config data:", error);
+    return <div>Error loading data</div>;
+  }
 
-    const [accordionItems, setAccordionItems] = useState([
-      { id: Date.now(), title: "Élément 1" },
-    ]);
+  const resetForm = () => {
+    if (techConfig) {
+      setFormData({
+        title: techConfig.title,
+        description: techConfig.description || "",
+        isMultiSelection: techConfig.isMultiSelection || false,
+      });
+      setAccordionItems(techConfig.refs || []);
+      setIsModified(false);
+    }
+  };
+
+  const handleAccordionItemChange = (id: string, field: string, value: any) => {
+    setAccordionItems((prevItems) =>
+      prevItems.map((item) =>
+        item._id === id ? { ...item, [field]: value } : item
+      )
+    );
+    setIsModified(true);
+  };
 
     const addAccordionItem = () => {
       setAccordionItems([
@@ -24,9 +93,59 @@ import EditAccordionItem from "./EditAccordionItem";
       ]);
     };
 
-    const removeAccordionItem = (id: number) => {
-      setAccordionItems(accordionItems.filter((item) => item.id !== id));
+  const removeAccordionItem = (id: string) => {
+    setAccordionItems(accordionItems.filter((item) => item._id !== id));
+    setIsModified(true);
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value, 
+    }));
+
+    setIsModified(true);
+  };
+
+
+  // Fonction de soumission du formulaire
+  const handleSubmit = async () => {
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      isMultiSelection: formData.isMultiSelection,
+      refs: accordionItems.map((item) => ({
+        label: item.label,
+        value: item.value,
+        isDefault: item.isDefault,
+      })),
     };
+    console.log("Payload envoyé à l'API :", JSON.stringify(payload));
+
+    try {
+      const response = await fetch(`http://localhost:3000/config/${configId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const updatedConfig = await response.json();
+        console.log("Mise à jour réussie :", updatedConfig);
+        onClose();
+      } else {
+        console.error("Erreur lors de la mise à jour de la configuration");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la requête PATCH", error);
+    }
+  };
 
     return (
       <Dialog open={open} onClose={onClose} className="relative z-10">
@@ -59,19 +178,38 @@ import EditAccordionItem from "./EditAccordionItem";
                           />
                         </div>
 
-                        <div className="mb-4 w-full">
-                          <label className="block text-sm font-medium text-gray-700">
-                            Description
-                          </label>
-                          <textarea className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                        </div>
-                        <button
-                          type="button"
-                          className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                          onClick={addAccordionItem}
-                        >
-                          Ajouter un élément
-                        </button>
+                      <div className="mb-4 w-full">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Description
+                        </label>
+                        <textarea
+                          name="description"
+                          value={formData.description}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        />
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Sélection multiple
+                        </label>
+                        <input
+                          type="checkbox"
+                          name="isMultiSelection"
+                          checked={formData.isMultiSelection}
+                          onChange={handleInputChange}
+                          className="checkbox"
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                        onClick={addAccordionItem}
+                      >
+                        Ajouter un élément
+                      </button>
 
                         <div className="join join-vertical w-full mt-3">
                           {/* Collaps 1 */}

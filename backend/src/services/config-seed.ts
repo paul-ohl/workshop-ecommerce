@@ -1,8 +1,8 @@
 import { describe } from "node:test";
 import ConfigModel from "../models/config.model";
 
-export function seedConfig() {
-	ConfigModel.create({
+export async function seedConfig() {
+	await ConfigModel.create({
 		colorsConfigs: [{
 			title: "Coque",
 			description: "Comprend avant et arrière",

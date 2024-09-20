@@ -8,10 +8,9 @@ router.get("/health-check", (_req, res) => {
   res.send("OK");
 });
 
-
 router
-  .get("/config", async (_req, res) => {
-  res.send(await configService.getAll());
+  .get('/config', async (_req, res) => {
+    res.send(await configService.getAll());
   })
   .post('/config/:configSection', async (req, res) => {
     try {

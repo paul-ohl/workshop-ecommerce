@@ -11,14 +11,17 @@
   },
   "dependencies": {
     "@typegoose/typegoose": "^12.7.0",
+    "axios": "^1.7.7",
     "mongoose": "^8.6.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@types/node": "^22.5.5",
     "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^2.1.5",
     "@types/react": "^18.3.3",

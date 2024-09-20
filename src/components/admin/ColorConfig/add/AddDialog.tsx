@@ -1,32 +1,117 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useState } from "react";
-import AccordionItem from "./AddAccordionItem";
+import AddAccordionItem from "./AddAccordionItem";
 
 interface AddDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose: () => void; // Fonction pour fermer et rafraîchir
 }
 
 const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
+  const [accordionItems, setAccordionItems] = useState<any[]>([]);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    isMultiSelection: false,
+  });
 
-  const [accordionItems, setAccordionItems] = useState([
-    { id: Date.now(), title: "Élément 1" },
-  ]);
-
+  // Ajouter un élément d'accordéon
   const addAccordionItem = () => {
     setAccordionItems([
       ...accordionItems,
-      { id: Date.now(), title: `Élément ${accordionItems.length + 1}` },
+      {
+        _id: Date.now().toString(),
+        label: `New Item ${accordionItems.length + 1}`,
+        value: 0,
+        isDefault: false,
+      },
     ]);
   };
 
-  const removeAccordionItem = (id: number) => {
-    setAccordionItems(accordionItems.filter((item) => item.id !== id));
+  // Supprimer un élément d'accordéon
+  const removeAccordionItem = (id: string) => {
+    setAccordionItems(accordionItems.filter((item) => item._id !== id));
+  };
+
+  // Gérer les changements dans les items d'accordéon
+  const handleAccordionItemChange = (
+    id: string,
+    field: string,
+    value: any
+  ) => {
+    setAccordionItems((prevItems) =>
+      prevItems.map((item) =>
+        item._id === id ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const handleSubmit = async () => {
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      isMultiSelection: formData.isMultiSelection,
+      refs: accordionItems.map((item) => ({
+        label: item.label,
+        value: item.value,
+        isDefault: item.isDefault,
+        color: item.color, // Ajouter la couleur ici
+      })),
+    };
+
+    console.log("Payload envoyé à l'API :", JSON.stringify(payload));
+
+    try {
+      const response = await fetch("http://localhost:3000/config/color", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const newConfig = await response.json();
+        console.log("Création réussie :", newConfig);
+
+        // Réinitialiser le formulaire
+        setFormData({
+          title: "",
+          description: "",
+          isMultiSelection: false,
+        });
+        setAccordionItems([]); // Réinitialiser les éléments d'accordéon
+
+        onClose(); // Fermer la modale et rafraîchir les données
+      } else {
+        console.error("Erreur lors de la création de la configuration");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la requête POST", error);
+    }
+  };
+
+  // Gestion du changement pour les inputs texte et checkbox
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      isMultiSelection: e.target.checked,
+    }));
   };
 
   return (
@@ -46,7 +131,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
                     as="h3"
                     className="text-base font-semibold leading-6 text-gray-900"
                   >
-                    Ajouter un élément
+                    Ajouter une nouvelle configuration
                   </DialogTitle>
                   <div className="mt-2 w-full">
                     <form className="w-full">
@@ -56,6 +141,9 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
                         </label>
                         <input
                           type="text"
+                          name="title"
+                          value={formData.title}
+                          onChange={handleInputChange}
                           className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
@@ -64,8 +152,27 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
                         <label className="block text-sm font-medium text-gray-700">
                           Description
                         </label>
-                        <textarea className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                        <textarea
+                          name="description"
+                          value={formData.description}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        />
                       </div>
+
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Sélection multiple
+                        </label>
+                        <input
+                          type="checkbox"
+                          name="isMultiSelection"
+                          checked={formData.isMultiSelection}
+                          onChange={handleCheckboxChange}
+                          className="checkbox"
+                        />
+                      </div>
+
                       <button
                         type="button"
                         className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
@@ -75,13 +182,16 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
                       </button>
 
                       <div className="join join-vertical w-full mt-3">
-                        {/* Collaps 1 */}
                         {accordionItems.map((item) => (
-                          <AccordionItem
-                            key={`${item.id}${item.title}`}
-                            id={item.id}
-                            title={item.title}
-                            onRemove={() => removeAccordionItem(item.id)}
+                          <AddAccordionItem
+                            key={item._id}
+                            id={item._id}
+                            title={item.label}
+                            value={item.value}
+                            isDefault={item.isDefault}
+                            path={item.path}
+                            onChange={handleAccordionItemChange}
+                            onRemove={() => removeAccordionItem(item._id)}
                           />
                         ))}
                       </div>
@@ -93,10 +203,10 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 w-full">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleSubmit}
                 className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
               >
-                Modifier
+                Ajouter
               </button>
               <button
                 type="button"

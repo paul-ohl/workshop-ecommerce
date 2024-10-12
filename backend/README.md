@@ -9,6 +9,7 @@ We use Express for the backend, and MongoDB for the database.
 Returns all the configs (meaning only one at the moment) in a `config` array.
 
 example return:
+
 ```json
 {
   "config": [
@@ -37,7 +38,7 @@ example return:
           "isMultiSelection": false,
           "isBase": true,
           "_id": "66ec3a1791e78e572efb963c"
-        },
+        }
       ],
       "techConfigs": [
         {
@@ -105,7 +106,6 @@ class RefType {
 
 Modify a customization option.
 The URL parameter is the id of the configuration element that should be modified.
-
 
 This is the schema of the data that must be sent in the body of the `PATCH` request:
 

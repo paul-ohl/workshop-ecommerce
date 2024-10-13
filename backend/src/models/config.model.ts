@@ -12,7 +12,7 @@ export const RefTypeSchema = new Schema({
 export const ConfigElementSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, default: '' },
-  refs: { type: [String], required: true },
+  refs: { type: [RefTypeSchema], required: true },
   isMultiSelection: { type: Boolean, required: true },
   isBase: { type: Boolean, default: false },
 });

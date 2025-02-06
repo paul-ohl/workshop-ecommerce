@@ -153,7 +153,7 @@ describe('Configuration routes', () => {
     const config = await request(app).get('/config');
     const id = config.body.config[0].colorsConfigs[0]._id;
     const oldTitle = config.body.config[0].colorsConfigs[0].title;
-    let res = await request(app)
+    const res = await request(app)
       .patch(`/config/${id}`)
       .send({
         title: 'Example Test',

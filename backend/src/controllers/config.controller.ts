@@ -26,8 +26,12 @@ export async function addConfigElement(req: Request, res: Response) {
         configElement,
       ),
     });
-  } catch (error: any) {
-    res.status(400).send({ error: error.message });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).send({ error: error.message });
+    } else {
+      res.status(400).send({ error });
+    }
   }
 }
 
@@ -45,7 +49,11 @@ export async function updateConfigElement(req: Request, res: Response) {
     res.send({
       config: await ConfigService.updateConfigElement(id, configElement),
     });
-  } catch (error: any) {
-    res.status(400).send({ error: error.message });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).send({ error: error.message });
+    } else {
+      res.status(400).send({ error });
+    }
   }
 }

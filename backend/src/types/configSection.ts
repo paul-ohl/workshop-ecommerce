@@ -11,7 +11,7 @@ class ConfigSection {
     if (sectionName == undefined) {
       throw new Error('Section name is required');
     }
-    let s = sectionName.trim().toLowerCase();
+    const s = sectionName.trim().toLowerCase();
     if (s === '') {
       throw new Error('Section name is required');
     }

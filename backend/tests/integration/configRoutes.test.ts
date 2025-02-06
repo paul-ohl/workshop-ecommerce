@@ -9,7 +9,10 @@ let app: any;
 
 const connectToDatabase = async () => {
   try {
-    await mongoose.connect(`${MONGO_URI_TESTS}-${generateRandomString()}`, { connectTimeoutMS: 800, socketTimeoutMS: 800 });
+    await mongoose.connect(`${MONGO_URI_TESTS}-${generateRandomString()}`, {
+      connectTimeoutMS: 800,
+      socketTimeoutMS: 800,
+    });
   } catch (error) {
     console.error('Error connecting to MongoDB', error);
     process.exit(1); // Quitte l'application si la connexion échoue
@@ -45,42 +48,49 @@ describe('Configuration routes', () => {
     expect(seededRes.body.config[0]).toHaveProperty('techConfigs');
   });
 
-  test("post config route", async () => {
+  test('post config route', async () => {
     const validConfig = {
-      title: "Example Test",
-      description: "TESTESTEST",
-      refs: [{
-        label: "TEST1",
-        color: "#000000",
-        pathToImg: "shell_000000.jpg",
-        value: 0,
-        isDefault: true,
-      }, {
-        label: "TEST2",
-        color: "#0000FF30",
-        pathToImg: "shell_0000FF.jpg",
-        value: 0,
-        isDefault: false,
-      }],
+      title: 'Example Test',
+      description: 'TESTESTEST',
+      refs: [
+        {
+          label: 'TEST1',
+          color: '#000000',
+          pathToImg: 'shell_000000.jpg',
+          value: 0,
+          isDefault: true,
+        },
+        {
+          label: 'TEST2',
+          color: '#0000FF30',
+          pathToImg: 'shell_0000FF.jpg',
+          value: 0,
+          isDefault: false,
+        },
+      ],
       isMultiSelection: false,
       isBase: false,
     };
-    let res = await request(app).post("/config/colors").send(validConfig);
+    let res = await request(app).post('/config/colors').send(validConfig);
     expect(res.status).toBe(400);
-    expect(res.body.error).toBe("Critical error: no config found");
+    expect(res.body.error).toBe('Critical error: no config found');
 
     await seedConfig();
-    res = await request(app).post("/config/colors").send(validConfig);
+    res = await request(app).post('/config/colors').send(validConfig);
     expect(res.status).toBe(201);
-    expect(JSON.stringify(res.body.config.colorsConfigs)).toContain("Example Test");
+    expect(JSON.stringify(res.body.config.colorsConfigs)).toContain(
+      'Example Test',
+    );
 
-    res = await request(app).post("/config/tech").send(validConfig);
+    res = await request(app).post('/config/tech').send(validConfig);
     expect(res.status).toBe(201);
-    expect(JSON.stringify(res.body.config.techConfigs)).toContain("Example Test");
+    expect(JSON.stringify(res.body.config.techConfigs)).toContain(
+      'Example Test',
+    );
 
-    res = await request(app).post("/config/colors").send({
-      title: "Example Test",
-      description: "TESTESTEST",
+    res = await request(app).post('/config/colors').send({
+      title: 'Example Test',
+      description: 'TESTESTEST',
       refs: [],
       isMultiSelection: false,
       isBase: false,
@@ -88,76 +98,89 @@ describe('Configuration routes', () => {
     expect(res.status).toBe(201);
   });
 
-  test("post config route with invalid data", async () => {
+  test('post config route with invalid data', async () => {
     await seedConfig();
 
-    let res = await request(app).post("/config/colors").send({
-      description: "TESTESTEST",
-      refs: [{
-        label: "TEST1",
-        color: "#000000",
-        pathToImg: "shell_000000.jpg",
-        value: 0,
-        isDefault: true,
-      }, {
-        label: "TEST2",
-        color: "#0000FF",
-        pathToImg: "shell_0000FF.jpg",
-        value: 0,
-        isDefault: false,
-      }],
-      isMultiSelection: false,
-      isBase: false,
-    });
+    let res = await request(app)
+      .post('/config/colors')
+      .send({
+        description: 'TESTESTEST',
+        refs: [
+          {
+            label: 'TEST1',
+            color: '#000000',
+            pathToImg: 'shell_000000.jpg',
+            value: 0,
+            isDefault: true,
+          },
+          {
+            label: 'TEST2',
+            color: '#0000FF',
+            pathToImg: 'shell_0000FF.jpg',
+            value: 0,
+            isDefault: false,
+          },
+        ],
+        isMultiSelection: false,
+        isBase: false,
+      });
     expect(res.status).toBe(400);
-    expect(res.body.error).toBe("title is required");
+    expect(res.body.error).toBe('title is required');
 
-    res = await request(app).post("/config/colors").send({
-      title: "Example Test",
-      description: "TESTESTEST",
-      refs: [{
-        label: "TEST1",
-        color: "#000000",
-        pathToImg: "shell_000000.jpg",
-        value: 0,
-        isDefault: true,
-      }],
-      isBase: false,
-    });
+    res = await request(app)
+      .post('/config/colors')
+      .send({
+        title: 'Example Test',
+        description: 'TESTESTEST',
+        refs: [
+          {
+            label: 'TEST1',
+            color: '#000000',
+            pathToImg: 'shell_000000.jpg',
+            value: 0,
+            isDefault: true,
+          },
+        ],
+        isBase: false,
+      });
     expect(res.status).toBe(400);
-    expect(res.body.error).toBe("isMultiSelection is required");
+    expect(res.body.error).toBe('isMultiSelection is required');
   });
 
-  test("patch config route", async () => {
+  test('patch config route', async () => {
     await seedConfig();
     // Find any element in the config
-    const config = await request(app).get("/config");
+    const config = await request(app).get('/config');
     const id = config.body.config[0].colorsConfigs[0]._id;
     const oldTitle = config.body.config[0].colorsConfigs[0].title;
-    let res = await request(app).patch(`/config/${id}`).send({
-      title: "Example Test",
-      description: "TESTESTEST",
-      refs: [{
-        label: "TEST1",
-        color: "#000000",
-        pathToImg: "shell_000000.jpg",
-        value: 0,
-        isDefault: true,
-      }, {
-        label: "TEST2",
-        color: "#0000FF",
-        pathToImg: "shell_0000FF.jpg",
-        value: 0,
-        isDefault: false,
-      }],
-      isMultiSelection: false,
-      isBase: false,
-    });
+    let res = await request(app)
+      .patch(`/config/${id}`)
+      .send({
+        title: 'Example Test',
+        description: 'TESTESTEST',
+        refs: [
+          {
+            label: 'TEST1',
+            color: '#000000',
+            pathToImg: 'shell_000000.jpg',
+            value: 0,
+            isDefault: true,
+          },
+          {
+            label: 'TEST2',
+            color: '#0000FF',
+            pathToImg: 'shell_0000FF.jpg',
+            value: 0,
+            isDefault: false,
+          },
+        ],
+        isMultiSelection: false,
+        isBase: false,
+      });
     expect(res.status).toBe(200);
-    expect(JSON.stringify(res.body)).toContain("Example Test");
+    expect(JSON.stringify(res.body)).toContain('Example Test');
     expect(JSON.stringify(res.body)).not.toContain(oldTitle);
   });
-
 });
 
 function generateRandomString(): string {

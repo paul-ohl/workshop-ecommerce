@@ -1,4 +1,4 @@
-import ConfigSection from "../../src/types/configSection";
+import ConfigSection from '../../src/types/configSection';
 
 describe('configSection domain type', () => {
   test('happy path', () => {
@@ -10,7 +10,6 @@ describe('configSection domain type', () => {
     expect(configSection.isTech).toBe(true);
     expect(configSection.isColors).toBe(false);
 
-
     configSection = ConfigSection.create('   TECH     ');
     expect(configSection.isTech).toBe(true);
 
@@ -19,9 +18,13 @@ describe('configSection domain type', () => {
   });
 
   test('invalid section name', () => {
-    expect(() => ConfigSection.create('invalid')).toThrow('Invalid section name');
+    expect(() => ConfigSection.create('invalid')).toThrow(
+      'Invalid section name',
+    );
     expect(() => ConfigSection.create('')).toThrow('Section name is required');
     let name: any;
-    expect(() => ConfigSection.create(name)).toThrow('Section name is required');
+    expect(() => ConfigSection.create(name)).toThrow(
+      'Section name is required',
+    );
   });
 });

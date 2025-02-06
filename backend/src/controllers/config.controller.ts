@@ -5,7 +5,7 @@ import ConfigSection from '../types/configSection';
 
 export async function getConfig(_req: Request, res: Response) {
   res.send({
-    config: await ConfigService.getAll()
+    config: await ConfigService.getAll(),
   });
 }
 

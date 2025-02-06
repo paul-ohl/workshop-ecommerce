@@ -38,14 +38,14 @@ describe('Configuration routes', () => {
   test('get config route', async () => {
     const res = await request(app).get('/config');
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('config');
-    expect(JSON.stringify(res.body.config)).toBe('[]');
+    //expect(res.body).toHaveProperty('config');
+    expect(JSON.stringify(res.body)).toBe('[]');
 
     await seedConfig();
     const seededRes = await request(app).get('/config');
     expect(seededRes.status).toBe(200);
-    expect(seededRes.body.config[0]).toHaveProperty('colorsConfigs');
-    expect(seededRes.body.config[0]).toHaveProperty('techConfigs');
+    expect(seededRes.body[0]).toHaveProperty('colorsConfigs');
+    expect(seededRes.body[0]).toHaveProperty('techConfigs');
   });
 
   test('post config route', async () => {
@@ -78,13 +78,13 @@ describe('Configuration routes', () => {
     await seedConfig();
     res = await request(app).post('/config/colors').send(validConfig);
     expect(res.status).toBe(201);
-    expect(JSON.stringify(res.body.config.colorsConfigs)).toContain(
+    expect(JSON.stringify(res.body.colorsConfigs)).toContain(
       'Example Test',
     );
 
     res = await request(app).post('/config/tech').send(validConfig);
     expect(res.status).toBe(201);
-    expect(JSON.stringify(res.body.config.techConfigs)).toContain(
+    expect(JSON.stringify(res.body.techConfigs)).toContain(
       'Example Test',
     );
 
@@ -151,8 +151,8 @@ describe('Configuration routes', () => {
     await seedConfig();
     // Find any element in the config
     const config = await request(app).get('/config');
-    const id = config.body.config[0].colorsConfigs[0]._id;
-    const oldTitle = config.body.config[0].colorsConfigs[0].title;
+    const id = config.body[0].colorsConfigs[0]._id;
+    const oldTitle = config.body[0].colorsConfigs[0].title;
     const res = await request(app)
       .patch(`/config/${id}`)
       .send({

@@ -24,12 +24,12 @@ export async function addConfigElement(req: Request, res: Response) {
       b.isMultiSelection,
       b.isBase,
     );
-    res.status(201).send({
-      config: await ConfigService.createConfigElement(
+    res.status(201).send(
+      await ConfigService.createConfigElement(
         configSection,
         configElement,
       ),
-    });
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).send({ error: error.message });
@@ -50,9 +50,9 @@ export async function updateConfigElement(req: Request, res: Response) {
       b.isMultiSelection,
       b.isBase,
     );
-    res.send({
-      config: await ConfigService.updateConfigElement(id, configElement),
-    });
+    res.send(
+      await ConfigService.updateConfigElement(id, configElement),
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).send({ error: error.message });

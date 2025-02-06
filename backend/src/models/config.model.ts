@@ -1,63 +1,27 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
-import { Types } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-class RefType {
-  @prop()
-  label!: string;
+export const RefTypeSchema = new Schema({
+  label: { type: String, required: true },
+  // /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/gm.test(v);
+  color: { type: String, required: false },
+  pathToImg: { type: String, required: false },
+  value: { type: Number, required: true },
+  isDefault: { type: Boolean, default: false },
+});
 
-	@prop({
-		validate: {
-			validator: (v) => {
-				return /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/gm.test(v);
-			}
-		}
-	})
-	color?: string;
+export const ConfigElementSchema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String, default: '' },
+  refs: { type: [RefTypeSchema], required: true },
+  isMultiSelection: { type: Boolean, required: true },
+  isBase: { type: Boolean, default: false },
+});
 
-  @prop()
-  pathToImg?: string;
+export const ConfigSchema = new Schema({
+  colorsConfigs: { type: [ConfigElementSchema], required: true },
+  techConfigs: { type: [ConfigElementSchema], required: true },
+});
 
-	@prop({
-		validate: {
-			validator: (v) => {
-				return v >= 0;
-			}
-		}
-	})
-	value!: number;
-
-	@prop({ default: false })
-	isDefault?: boolean;
-}
-
-export class ConfigElement {
-	@prop({ type: () => Types.ObjectId, default: () => new Types.ObjectId() })
-	public _id!: Types.ObjectId;
-
-	@prop()
-	title!: string;
-
-	@prop({ default: "" })
-	description?: string;
-
-	@prop({ type: RefType })
-	refs!: RefType[];
-
-  @prop()
-  isMultiSelection!: boolean;
-
-	@prop({ default: false })
-	isBase?: boolean;
-}
-
-export class Config {
-	@prop({ type: ConfigElement })
-	colorsConfigs!: ConfigElement[];
-
-	@prop({ type: ConfigElement })
-	techConfigs!: ConfigElement[];
-}
-
-const ConfigModel = getModelForClass(Config);
+const ConfigModel = mongoose.model('Config', ConfigSchema);
 
 export default ConfigModel;

@@ -1,36 +1,24 @@
-import dotenv from "dotenv";
-import mongoose from "mongoose";
-import ConfigModel from "./models/config.model";
-import { seedConfig } from "./services/config-seed";
-import router from "./routes/router";
-import app from "./app";
-const cors = require("cors");
-
-dotenv.config();
+import mongoose from 'mongoose';
+import ConfigModel from './models/config.model';
+import { seedConfig } from './utils/config-seed';
+import app from './app';
 
 // Valider que les variables d'environnement sont présentes
 const mongoUri = process.env.MONGO_URI;
 const port = process.env.PORT;
 if (!mongoUri) {
-  throw new Error("MONGO_URI is not defined in the .env file");
+  throw new Error('MONGO_URI is not defined in the .env file');
 }
 if (!port) {
-  throw new Error("PORT is not defined in the .env file");
+  throw new Error('PORT is not defined in the .env file');
 }
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-  })
-);
 const connectToDatabase = async () => {
   try {
     await mongoose.connect(mongoUri);
-    console.log("Connected to MongoDB");
+    console.log('Connected to MongoDB');
   } catch (error) {
-    console.error("Error connecting to MongoDB", error);
+    console.error('Error connecting to MongoDB', error);
     process.exit(1); // Quitte l'application si la connexion échoue
   }
 };
@@ -41,7 +29,7 @@ const startApp = async () => {
   // SeedGbaModel if the db hasn't been seeded
   const config = await ConfigModel.find({});
   if (config.length === 0) {
-    console.log("Seeding database.");
+    console.log('Seeding database.');
     seedConfig();
   }
 

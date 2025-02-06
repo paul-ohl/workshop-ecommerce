@@ -1,23 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddToCart from "./AddToCart";
 import ColorsConfiguration from "./ColorsConfiguration";
 import ColorsLabels from "./ColorsLabels";
 import ConsoleDisplay from "./ConsoleDisplay";
 import useGetAllConfigs from "./utils/useGetAllConfig";
+import { RefType } from "./types/ref";
+import { ConfigElement } from "./types/config-element";
 
 const CustomizationPage = () => {
   const [isColorsConfigurationDisplayed, setIsColorsConfigurationDisplayed] =
     useState(false);
-  //node-back/config
 
   const { data, error, isLoading } = useGetAllConfigs();
 
   const techConfigs = data?.[0].techConfigs;
   const colorsConfigs = data?.[0].colorsConfigs;
 
-  const [colorsToDisplay, setColorsToDisplay] = useState<any[]>([]);
-  const [extraColorConfigs, setExtraColorConfigs] = useState<any>();
-  const [extraConfigs, setExtraConfigs] = useState<any[]>([]);
+  const [colorsToDisplay, setColorsToDisplay] = useState<
+    ConfigElement | undefined
+  >();
+  const [extraColorConfigs, setExtraColorConfigs] = useState<RefType[]>([]);
+  const [extraConfigs, setExtraConfigs] = useState<RefType[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
   if (isLoading) {
@@ -52,7 +55,7 @@ const CustomizationPage = () => {
                 setIsColorsConfigurationDisplayed
               }
             />
-            <ConsoleDisplay configs={extraColorConfigs} />
+            <ConsoleDisplay colorsConfigs={colorsConfigs} />
             <div className="">
               <AddToCart
                 totalPrice={totalPrice}

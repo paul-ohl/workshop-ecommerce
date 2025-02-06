@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { Config } from "../../types/config";
-import { DynamicConfigs } from "../../types/dynamic-configs";
+import { RefType } from "./types/ref";
+import { ConfigElement } from "./types/config-element";
 
 interface TechConfigurationProps {
-  extraConfigs: any;
-  setExtraConfigs: (value: any) => void;
-  techConfigs: any;
+  extraConfigs: RefType[];
+  setExtraConfigs: React.Dispatch<React.SetStateAction<RefType[]>>;
+  techConfigs: ConfigElement[];
 }
 
 const TechConfiguration = ({
@@ -13,18 +12,20 @@ const TechConfiguration = ({
   setExtraConfigs,
   techConfigs,
 }: TechConfigurationProps) => {
-  const handleTechConfigSelection = (config) => {
+  const handleTechConfigSelection = (config: RefType) => {
     if (!extraConfigs.includes(config)) {
       return setExtraConfigs(extraConfigs.concat(config));
     }
 
-    return setExtraConfigs(extraConfigs.filter((item) => item !== config));
+    return setExtraConfigs(
+      extraConfigs.filter((item: RefType) => item !== config)
+    );
   };
   return (
     <>
       <p className="text-xl font-bold">CONFIGURATIONS</p>
       <p className="text-sm mb-4">
-        Modifiez les configurations initials <br /> de votre appareil{" "}
+        Modifiez les configurations initials <br /> de votre appareil.
       </p>
       {techConfigs?.map((item, index) => {
         return (
@@ -36,7 +37,7 @@ const TechConfiguration = ({
                 <p className="text-sm">{item.description}</p>
               </div>
               <div className="collapse-content flex flex-col justify-center items-start">
-                {item?.ref.map((item, index) => {
+                {item?.refs.map((item, index) => {
                   return (
                     <span
                       key={index}

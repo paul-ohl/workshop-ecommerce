@@ -1,14 +1,16 @@
 import { RxCross2 } from "react-icons/rx";
+import { useEffect } from "react";
 
 import TechConfiguration from "./TechConfiguration";
-import { Config } from "../../types/config";
-import { useEffect, useState } from "react";
+import { RefType } from "./types/ref";
+import { ConfigElement } from "./types/config-element";
+
 interface AddToCartProps {
   totalPrice: number;
-  setTotalPrice: (value: number) => void;
-  extraConfigs: any;
-  setExtraConfigs: (value: any) => void;
-  techConfigs: any;
+  setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
+  extraConfigs: RefType[];
+  setExtraConfigs: React.Dispatch<React.SetStateAction<RefType[]>>;
+  techConfigs: ConfigElement[];
 }
 
 const AddToCart = ({

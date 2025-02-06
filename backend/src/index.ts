@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import ConfigModel from "./models/config.model";
 import { seedConfig } from "./services/config-seed";
+import router from "./routes/router";
 import app from "./app";
 const cors = require("cors");
 
@@ -43,7 +44,6 @@ const startApp = async () => {
     console.log("Seeding database.");
     seedConfig();
   }
-
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);

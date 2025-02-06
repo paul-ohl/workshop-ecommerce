@@ -3,9 +3,13 @@ import {
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 
+import { ConfigElement } from "./types/config-element";
+
 interface ColorsLabelsProps {
-  colorsConfigs: any;
-  setColorsToDisplay: (value: any) => void;
+  colorsConfigs: ConfigElement[];
+  setColorsToDisplay: React.Dispatch<
+    React.SetStateAction<ConfigElement | undefined>
+  >;
   setIsColorsConfigurationDisplayed: (value: boolean) => void;
 }
 
@@ -14,7 +18,7 @@ const ColorsLabels = ({
   setColorsToDisplay,
   setIsColorsConfigurationDisplayed,
 }: ColorsLabelsProps) => {
-  const handleRefSelection = (item) => {
+  const handleRefSelection = (item: ConfigElement) => {
     setColorsToDisplay(item);
     setIsColorsConfigurationDisplayed(true);
   };

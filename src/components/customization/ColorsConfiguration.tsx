@@ -1,10 +1,12 @@
 import { RxCross2 } from "react-icons/rx";
-import { Config } from "../../types/config";
+
+import { RefType } from "./types/ref";
+import { ConfigElement } from "./types/config-element";
 
 interface ColorsConfigurationProps {
-  colorsToDisplay: any;
-  extraColorConfigs: any;
-  setExtraColorConfigs: (value: any) => void;
+  colorsToDisplay: ConfigElement | undefined;
+  extraColorConfigs: RefType[];
+  setExtraColorConfigs: React.Dispatch<React.SetStateAction<RefType[]>>;
   isColorsConfigurationDisplayed: boolean;
   setIsColorsConfigurationDisplayed: (value: boolean) => void;
 }
@@ -16,17 +18,25 @@ const ColorsConfiguration = ({
   isColorsConfigurationDisplayed,
   setIsColorsConfigurationDisplayed,
 }: ColorsConfigurationProps) => {
-  const handleExtraColorConfigs = (value: any) => {};
-  console.log(colorsToDisplay);
+  const handleExtraColorConfigs = (config: RefType) => {
+    if (!extraColorConfigs.includes(config)) {
+      return setExtraColorConfigs(extraColorConfigs.concat(config));
+    }
+
+    return setExtraColorConfigs(
+      extraColorConfigs.filter((item) => item !== config)
+    );
+  };
+
   return (
     isColorsConfigurationDisplayed && (
       <div className="absolute left-4 z-20">
         <li className="flex flex-col items-center bg-white w-14 p-4 rounded-2xl shadow-2xl">
-          {colorsToDisplay?.ref.map((item, index) => {
+          {colorsToDisplay?.refs.map((item: RefType, index: number) => {
             return (
               <div
                 key={index}
-                onClick={() => setExtraColorConfigs(!extraColorConfigs)}
+                onClick={() => handleExtraColorConfigs(item)}
                 style={{ backgroundColor: item.color }}
                 className={`badge badge-lg m-2 cursor-pointer hover:border-2 hover:border-red-300`}
               ></div>

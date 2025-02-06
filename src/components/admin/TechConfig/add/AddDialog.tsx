@@ -5,7 +5,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import AddAccordionItem from "./AddAccordionItem";
+import AddAccordionItem from "../edit/AddAccordionItem";
 
 interface AddDialogProps {
   open: boolean;

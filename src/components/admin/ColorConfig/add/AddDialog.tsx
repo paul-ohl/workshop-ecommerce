@@ -67,7 +67,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ open, onClose }) => {
     console.log("Payload envoyé à l'API :", JSON.stringify(payload));
 
     try {
-      const response = await fetch("http://localhost:3000/config/color", {
+      const response = await fetch("http://localhost:3000/config/colors", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

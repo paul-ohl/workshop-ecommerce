@@ -4,7 +4,7 @@ import {
     DialogPanel,
     DialogTitle,
   } from "@headlessui/react";
-  import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditAccordionItem from "./EditAccordionItem";
 import { useQuery } from "react-query";
 
@@ -86,12 +86,18 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
     setIsModified(true);
   };
 
-    const addAccordionItem = () => {
-      setAccordionItems([
-        ...accordionItems,
-        { id: Date.now(), title: `Élément ${accordionItems.length + 1}` },
-      ]);
-    };
+  const addAccordionItem = () => {
+    setAccordionItems([
+      ...accordionItems,
+      {
+        _id: Date.now().toString(),
+        label: `New Item ${accordionItems.length + 1}`,
+        value: 0,
+        isDefault: false,
+      },
+    ]);
+    setIsModified(true);
+  };
 
   const removeAccordionItem = (id: string) => {
     setAccordionItems(accordionItems.filter((item) => item._id !== id));
@@ -105,7 +111,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
 
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value, 
+      [name]: type === "checkbox" ? checked : value,
     }));
 
     setIsModified(true);
@@ -164,7 +170,16 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
                       as="h3"
                       className="text-base font-semibold leading-6 text-gray-900"
                     >
-                      Ajouter un élément
+                      Modifier {initialTitle}
+                      {isModified && (
+                        <button
+                          type="button"
+                          className="absolute top-4 right-4 btn btn-outline btn-sm"
+                          onClick={resetForm}
+                        >
+                          Réinitialiser
+                        </button>
+                      )}
                     </DialogTitle>
                     <div className="mt-2 w-full">
                       <form className="w-full">
@@ -174,51 +189,57 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
                           </label>
                           <input
                             type="text"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleInputChange}
                             className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
 
-                      <div className="mb-4 w-full">
-                        <label className="block text-sm font-medium text-gray-700">
-                          Description
-                        </label>
-                        <textarea
-                          name="description"
-                          value={formData.description}
-                          onChange={handleInputChange}
-                          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        />
-                      </div>
+                        <div className="mb-4 w-full">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Description
+                          </label>
+                          <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          />
+                        </div>
 
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">
-                          Sélection multiple
-                        </label>
-                        <input
-                          type="checkbox"
-                          name="isMultiSelection"
-                          checked={formData.isMultiSelection}
-                          onChange={handleInputChange}
-                          className="checkbox"
-                        />
-                      </div>
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Sélection multiple
+                          </label>
+                          <input
+                            type="checkbox"
+                            name="isMultiSelection"
+                            checked={formData.isMultiSelection}
+                            onChange={handleInputChange}
+                            className="checkbox"
+                          />
+                        </div>
 
-                      <button
-                        type="button"
-                        className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                        onClick={addAccordionItem}
-                      >
-                        Ajouter un élément
-                      </button>
+                        <button
+                          type="button"
+                          className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                          onClick={addAccordionItem}
+                        >
+                          Ajouter un élément
+                        </button>
 
                         <div className="join join-vertical w-full mt-3">
-                          {/* Collaps 1 */}
                           {accordionItems.map((item) => (
                             <EditAccordionItem
-                              key={`${item.id}${item.title}`}
-                              id={item.id}
-                              title={item.title}
-                              onRemove={() => removeAccordionItem(item.id)}
+                              key={item._id}
+                              id={item._id}
+                              title={item.label}
+                              value={item.value}
+                              isDefault={item.isDefault}
+                              path={item.path}
+                              onChange={handleAccordionItemChange}
+                              onRemove={() => removeAccordionItem(item._id)}
                             />
                           ))}
                         </div>
@@ -230,7 +251,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ open, onClose, configId }) => {
               <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 w-full">
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={handleSubmit}
                   className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                 >
                   Modifier

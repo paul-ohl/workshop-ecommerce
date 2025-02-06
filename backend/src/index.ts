@@ -17,7 +17,6 @@ if (!port) {
   throw new Error("PORT is not defined in the .env file");
 }
 
-app.use(cors());
 app.use(
   cors({
     origin: "http://localhost:5173",

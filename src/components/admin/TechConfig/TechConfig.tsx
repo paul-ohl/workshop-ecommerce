@@ -3,7 +3,7 @@ import "react-color-palette/css";
 import EditDialog from "./edit/EditDialog";
 import AddDialog from "./add/AddDialog";
 import DeleteDialog from "./DeleteDialog";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 // Hook pour récupérer les configurations
 const useGetAllConfigs = () => {
@@ -15,13 +15,14 @@ const useGetAllConfigs = () => {
 };
 
 const TechConfig = () => {
+  const queryClient = useQueryClient(); // Accéder au QueryClient
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null); // État pour stocker l'ID sélectionné
 
   // Récupération des données
   const { data, error, isLoading } = useGetAllConfigs();
-
   useEffect(() => {
     if (data) {
       console.log("Fetched Color Config Data:", data);
@@ -60,7 +61,10 @@ const TechConfig = () => {
 
   return (
     <>
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div
+        role="tabpanel"
+        className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+      >
         <div className="flex items-center gap-4 mb-5">
           <label className="input input-bordered flex items-center gap-2 rounded-badge w-50 input-sm">
             <input
@@ -121,7 +125,7 @@ const TechConfig = () => {
                     <th>
                       <button
                         className="btn btn-warning btn-xs mr-2"
-                        onClick={() => setEditOpen(true)}
+                        onClick={() => handleEdit(colorConf._id)}
                       >
                         Modifier
                       </button>
@@ -146,13 +150,10 @@ const TechConfig = () => {
 
       <EditDialog
         open={editOpen}
-        onClose={handleCloseEditDialog} 
+        onClose={handleCloseEditDialog}
         configId={selectedId}
       />
-      <AddDialog
-        open={addOpen}
-        onClose={handleCloseAddDialog}
-      />
+      <AddDialog open={addOpen} onClose={handleCloseAddDialog} />
       <DeleteDialog open={open} onClose={() => setOpen(false)} />
     </>
   );

@@ -8,9 +8,7 @@ export async function getConfig(_req: Request, res: Response) {
   //res.send({
   //  config: await ConfigService.getAll(),
   //});
-  res.send(
-    await ConfigService.getAll(),
-  );
+  res.send(await ConfigService.getAll());
 }
 
 export async function addConfigElement(req: Request, res: Response) {
@@ -24,12 +22,11 @@ export async function addConfigElement(req: Request, res: Response) {
       b.isMultiSelection,
       b.isBase,
     );
-    res.status(201).send(
-      await ConfigService.createConfigElement(
-        configSection,
-        configElement,
-      ),
-    );
+    res
+      .status(201)
+      .send(
+        await ConfigService.createConfigElement(configSection, configElement),
+      );
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).send({ error: error.message });
@@ -50,9 +47,7 @@ export async function updateConfigElement(req: Request, res: Response) {
       b.isMultiSelection,
       b.isBase,
     );
-    res.send(
-      await ConfigService.updateConfigElement(id, configElement),
-    );
+    res.send(await ConfigService.updateConfigElement(id, configElement));
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).send({ error: error.message });

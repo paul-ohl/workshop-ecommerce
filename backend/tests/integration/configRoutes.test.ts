@@ -78,15 +78,11 @@ describe('Configuration routes', () => {
     await seedConfig();
     res = await request(app).post('/config/colors').send(validConfig);
     expect(res.status).toBe(201);
-    expect(JSON.stringify(res.body.colorsConfigs)).toContain(
-      'Example Test',
-    );
+    expect(JSON.stringify(res.body.colorsConfigs)).toContain('Example Test');
 
     res = await request(app).post('/config/tech').send(validConfig);
     expect(res.status).toBe(201);
-    expect(JSON.stringify(res.body.techConfigs)).toContain(
-      'Example Test',
-    );
+    expect(JSON.stringify(res.body.techConfigs)).toContain('Example Test');
 
     res = await request(app).post('/config/colors').send({
       title: 'Example Test',

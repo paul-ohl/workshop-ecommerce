@@ -4,9 +4,13 @@ import ConfigElement from '../types/configElement';
 import ConfigSection from '../types/configSection';
 
 export async function getConfig(_req: Request, res: Response) {
-  res.send({
-    config: await ConfigService.getAll(),
-  });
+  // This is objectively better, but we don't have time to update the front
+  //res.send({
+  //  config: await ConfigService.getAll(),
+  //});
+  res.send(
+    await ConfigService.getAll(),
+  );
 }
 
 export async function addConfigElement(req: Request, res: Response) {

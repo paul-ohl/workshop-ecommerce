@@ -147,6 +147,37 @@ describe('Configuration routes', () => {
     expect(res.body.error).toBe('isMultiSelection is required');
   });
 
+  test('patch config route failure', async () => {
+    await seedConfig();
+    // Find any element in the config
+    const config = await request(app).get('/config');
+    const id = config.body[0].colorsConfigs[0]._id;
+    const res = await request(app)
+      .patch(`/config/${id}`)
+      .send({
+        description: 'TESTESTEST',
+        refs: [
+          {
+            label: 'TEST1',
+            color: '#000000',
+            pathToImg: 'shell_000000.jpg',
+            value: 0,
+            isDefault: true,
+          },
+          {
+            label: 'TEST2',
+            color: '#0000FF',
+            pathToImg: 'shell_0000FF.jpg',
+            value: 0,
+            isDefault: false,
+          },
+        ],
+        isMultiSelection: false,
+        isBase: false,
+      });
+    expect(res.status).toBe(400);
+  });
+
   test('patch config route', async () => {
     await seedConfig();
     // Find any element in the config
